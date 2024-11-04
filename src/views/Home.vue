@@ -1,13 +1,14 @@
 <template>
   <div class="main">
+    <Legend :c1="viaColor" :c2="arrivedColor" />
     <div class="fade map-panel py-2 px-5">
       <div>
         <label>
-          trace:
+          状态:
           <select v-model="traceState">
-            <option value="via">Via</option>
-            <option value="arrive">Arrive</option>
-            <option value="clear">Clear</option>
+            <option value="via">路过</option>
+            <option value="arrive">抵达</option>
+            <option value="clear">清除</option>
           </select>
         </label>
       </div>
@@ -23,13 +24,15 @@
 </template>
 
 <script setup>
+import Legend from './Legend.vue'
+
 import { ref, onMounted } from 'vue'
 import mapboxgl from 'mapbox-gl'
 import shp from 'shpjs'
 import { featureCollection as featureCollectionHelper } from '@turf/helpers'
 
 const mapContainer = ref(null)
-const visitedColor = ref('#d05347')
+const arrivedColor = ref('#d05347')
 const fillColor = ref('#fff')
 const viaColor = ref('#f3d1cf')
 const traceState = ref('arrive')
@@ -51,28 +54,6 @@ onMounted(async () => {
 
   const city_shp = await shp('./2023City.zip')
   const pro_shp = await shp('./2023Pro.zip')
-  const addMultiPolygonName = (geojsonData) => {
-    let features = JSON.parse(JSON.stringify(geojsonData.features)),
-      nameCoordinatesArray = []
-
-    for (let i = 0; i < features.length; i++) {
-      let properties = features[i].properties
-      let nameLngLat = {
-        name: properties.地名,
-        lnglat: properties.centroid || properties.center,
-      }
-      nameCoordinatesArray.push(nameLngLat)
-    }
-
-    for (let i = 0; i < nameCoordinatesArray.length; i++) {
-      const item = nameCoordinatesArray[i]
-      const nameDiv = document.createElement('div')
-      nameDiv.className = 'polygonName'
-      nameDiv.innerHTML = item.name
-
-      new mapboxgl.Marker(nameDiv).setLngLat(item.lnglat).addTo(this.map)
-    }
-  }
   map.on('load', () => {
     // cities-trace-source
     map.addSource('china-cities', {
@@ -136,7 +117,7 @@ onMounted(async () => {
       type: 'fill',
       source: 'trace-source',
       paint: {
-        'fill-color': visitedColor.value,
+        'fill-color': arrivedColor.value,
         'fill-opacity': 1,
       },
     })

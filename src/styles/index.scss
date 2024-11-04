@@ -36,3 +36,33 @@
         background-color: rgba(122, 122, 122, 0.9);
     }
 }
+
+.legend-box {
+    bottom: 100px;
+    position: absolute;
+    left: 150px;
+    z-index: 100;
+}
+
+.legend {
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 1);
+    font-size: 18px;
+    font-weight: bold;
+
+    .square {
+        display: inline-block;
+        width: 35px;
+        height: 15px;
+        margin-right: 10px;
+    }
+
+    .text {
+        color: #2c3e50;
+        font-family: "Noto Serif SC", DM Serif Display, STZhongsong, STKaiti, KaiTi, Roboto, serif;
+    }
+}
+
+label {
+    font-family: var(-t-font-family)
+}
